@@ -32,12 +32,11 @@ type Referable = Battle | Field | Side | Pokemon | PureEffect | Ability | Item |
 // keys which we skip during default (de)serialization and (the keys which)
 // need special treatment from these sets are then handled manually.
 
-// Battle inherits from Dex, but all of Dex's fields are redundant - we can
-// just recreate the Dex from the format.
 const BATTLE = new Set([
 	'dex', 'gen', 'ruleTable', 'id', 'log', 'inherit', 'format',
 	'zMoveTable', 'teamGenerator', 'NOT_FAIL', 'FAIL', 'SILENT_FAIL',
 	'field', 'sides', 'prng', 'hints', 'deserialized', 'maxMoveTable',
+	'queue',
 ]);
 const FIELD = new Set(['id', 'battle']);
 const SIDE = new Set(['battle', 'team', 'pokemon', 'choice', 'activeRequest']);
@@ -145,6 +144,7 @@ export const State = new class {
 			}
 		}
 		battle.prng = new PRNG(state.prng);
+		battle.queue.push(...state.queue);
 		// @ts-ignore - readonly
 		battle.hints = new Set(state.hints);
 		// @ts-ignore - readonly
